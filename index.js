@@ -1,22 +1,44 @@
-import http from 'http';
-import  express  from 'express';
-import cors from 'cors';
-import bodyParser from 'body-parser';
+//import http from 'http';
+import express from 'express'
+import mongoose from 'mongoose'
+//import bodyParser from 'body-parser';
+import multer from 'multer'
+import { reg_router as regrouter } from './routes/registrastion.js'
+import { login_router as loginrouter } from './routes/login.js'
+//import * as reg from './controller/registrastion.js'
 
+//conection code for mongodb
+main().catch(err => console.log(err))
 
+async function main () {
+  await mongoose.connect('mongodb://127.0.0.1:27017/ganpatibapa')
 
-//start server 
-const server=express();
+  console.log('database is connected')
+}
 
-// access to body 
-server.use(express.json());
+//acess form-body
+const uplod = multer()
 
-server.use((bodyParser.json()));
-server.use(bodyParser.urlencoded({ extended: true }));
-server.use(cors({origin: '*',}));
+//start server
+const server = express()
+//create router
+//const reg_router=express.Router();
 
+//acess form-body
+server.use(uplod.array())
 
-// this is use to globel midelver 
+server.use('/', regrouter)
+server.use('/', loginrouter)
+
+// access to body
+server.use(express.json())
+
+//server.use((bodyParser.json()));
+
+//server.use(bodyParser.urlencoded({ extended: true }));
+// server.use(cors({origin: '*',}));
+
+// this is use to globel midelver
 // server.use((req,res,next)=>{
 
 //     console.log(req.method,req.ip,req.hostname);
@@ -24,119 +46,13 @@ server.use(cors({origin: '*',}));
 
 // });
 
+// //api for hostelar registration
+// reg_router
+// .post('/hreg',hregauth,reg.hostelar_registrastion)
+// //api for gust registration
+// .post('/greg',gregauth,reg.gust_registrastion);
 
-
-//hostelar registration  midelwar 
-const hregauth=(req,res,next)=>{
-
-    console.log(" hosteler registrastion authentiction validation ");
-
-    var nameRegex = /^[A-Za-z]+$/;
-    var email=/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    var phone=/^(?:(?:\+|0{0,2})91(\s*[-]\s*)?|[0]?)?[6789]\d{9}$/;
-
-    const fname=req.body.fname;
-    const lname=req.body.lname;
-    const hemail=req.body.hemail;
-    const hcontact=req.body.hcontect;
-    //console.log(fname);
-    
-
-    if(nameRegex.test(fname)&&nameRegex.test(lname)&&email.test(hemail)&&phone.test(hcontact)){
-        next();
-    }
-    else{
-        console.error('unauthorised');
-        res.sendStatus(401);
-    }
-
-   
-
-};
-
-
-//gust registration  midelwar 
-const gregauth=(req,res,next)=>{
-
-    console.log("gust registrastion authentiction validation ");
-
-    var nameRegex = /^[A-Za-z]+$/;
-    var email=/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    var phone=/^(?:(?:\+|0{0,2})91(\s*[-]\s*)?|[0]?)?[6789]\d{9}$/;
-
-    const fname=req.body.fname;
-    const lname=req.body.lname;
-    const hemail=req.body.hemail;
-    const hcontact=req.body.hcontect;
-    console.log(fname,"iu",);
-    console.log(lname,lname,hemail,hcontact);
-    console.log(req.body);
-    
-
-    if(nameRegex.test(fname)&&nameRegex.test(lname)&&email.test(hemail)&&phone.test(hcontact)){
-        next();
-    }
-    else{
-        console.error('unauthorised');
-        res.sendStatus(401);
-    }
-
-   
-
-};
-
-
-//login midelwar 
-const loginauth=(req,res,next)=>{
-
-    console.log("login authentiction");
-   
-
-    next();
-
-};
-
-
-
-
-//api for hostelar registration  
-server.post('/hreg',hregauth,(req,res)=>{
-
-    //res.send("<h1>reg page<h1>");
-    res.json(req.body);
-    console.log('hello world',req.body);
-
-});
-
-
-//api for gust registration 
-server.post('/greg',gregauth,(req,res)=>{
-
-    //res.send("<h1>reg page<h1>");
-    res.json(req.body);
-    console.log('hello world',req.body);
-
-});
-
-
-
-//api for login
-server.post('/login',loginauth,(req,res)=>{
-
-    res.send("<h1>login page<h1>");
-    console.log('hello world');
-
-});
-
-
-
-
-
-
-
-//end of the server 
-server.listen(8080,()=>{
-
-    console.log("server is runing");
-
-});
+//end of the server
+server.listen(8080, () => {
+  console.log('server is runing')
+})
