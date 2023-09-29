@@ -11,5 +11,8 @@ reg_router
   .post('/hreg', regauth.hregauth, reg.hostelar_registrastion)
   //api for gust registration
   .post('/greg', regauth.gregauth, reg.gust_registrastion)
+  //user chek
+  .post('/user',regauth.userauthchek,reg.user_chek)
+
 
 export { reg_router as reg_router }

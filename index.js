@@ -1,7 +1,7 @@
 //import http from 'http';
 import express from 'express'
 import mongoose from 'mongoose'
-//import bodyParser from 'body-parser';
+import bodyParser from 'body-parser';
 import multer from 'multer'
 import { reg_router as regrouter } from './routes/registrastion.js'
 import { login_router as loginrouter } from './routes/login.js'
@@ -17,15 +17,17 @@ async function main () {
 }
 
 //acess form-body
-const uplod = multer()
+const uplod = multer();
 
 //start server
-const server = express()
+const server = express();
 //create router
 //const reg_router=express.Router();
 
 //acess form-body
 server.use(uplod.array())
+
+server.use(bodyParser.urlencoded({ extended: true }));
 
 server.use('/', regrouter)
 server.use('/', loginrouter)

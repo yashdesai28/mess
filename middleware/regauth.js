@@ -54,6 +54,7 @@ export const gregauth = (req, res, next) => {
   var email = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
   var phone = /^(?:(?:\+|0{0,2})91(\s*[-]\s*)?|[0]?)?[6789]\d{9}$/
   const passwordRegex = /^[a-zA-Z0-9]{5,9}$/
+console.log("ff");
 
   const fname = req.body.fname
   const lname = req.body.lname
@@ -79,3 +80,33 @@ export const gregauth = (req, res, next) => {
     res.sendStatus(401)
   }
 }
+
+
+
+//guests registration  midelwar
+export const userauthchek = (req, res, next) => {
+  console.log('user chek validation ')
+
+  
+  var email = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+  var phone = /^(?:(?:\+|0{0,2})91(\s*[-]\s*)?|[0]?)?[6789]\d{9}$/
+
+
+  const gemail = req.body.email
+  const gcontact = req.body.contact_number
+
+
+
+  console.log(req.body)
+
+  if (
+    email.test(gemail) ||
+    phone.test(gcontact)
+  ) {
+    next()
+  } else {
+    console.error('unauthorised')
+    res.sendStatus(401)
+  }
+}
+

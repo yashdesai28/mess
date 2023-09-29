@@ -10,6 +10,8 @@ const hosteler_registrastion_schema =new Schema({
     hosteler_contact_number:{type:Number,require:[true,"contact number is Required"],unique:[true,"this contact number is already use"]},
     room_no:String,
     hostel_type: {type: String,enum: {values: ['boys','girls'],message: '{VALUE} is not supported'}}
+    
+
 });
 
 
