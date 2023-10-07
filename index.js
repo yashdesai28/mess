@@ -5,6 +5,9 @@ import bodyParser from 'body-parser';
 import multer from 'multer'
 import { reg_router as regrouter } from './routes/registrastion.js'
 import { login_router as loginrouter } from './routes/login.js'
+import {Change_Password as chpass} from './routes/Change-Password.js'
+import {menu_router as menus_router} from './routes/menu.js'
+import cors from 'cors'
 //import * as reg from './controller/registrastion.js'
 
 //conection code for mongodb
@@ -25,12 +28,15 @@ const server = express();
 //const reg_router=express.Router();
 
 //acess form-body
+server.use(cors());
 server.use(uplod.array())
 
 server.use(bodyParser.urlencoded({ extended: true }));
 
 server.use('/', regrouter)
 server.use('/', loginrouter)
+server.use('/',chpass)
+server.use('/',menus_router)
 
 // access to body
 server.use(express.json())

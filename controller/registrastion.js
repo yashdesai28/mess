@@ -129,7 +129,7 @@ export const gust_registrastion = async (req, res) => {
     console.log('Data is available.');
     res.status(401).json(req.body);
     
-  }  
+  }   
 
   //res.send("<h1>reg page<h1>");
   
@@ -168,3 +168,56 @@ export const user_chek = async (req, res) => {
   
 }
 
+
+export const mess_handlar_registrastion = async (req, res) => {
+  let flg1 = 0
+  await regmodel.users
+      .find({
+          $or: [
+              { user_email: req.body.email },
+              { user_contact_number: req.body.contact_number }
+          ]
+      })
+      .then(users => {
+          if (users.length > 0) {
+              console.log('Data is available.')
+              flg1 = 1
+          } else {
+              flg1 = 0
+              console.log('Data is not available.')
+          }
+      })
+
+  if (flg1 == 0) {
+      const mhreg = new regmodel.mess_handler()
+      mhreg.handler_fname = req.body.fname
+      mhreg.handler_lname = req.body.lname
+      mhreg.handler_email = req.body.email
+      mhreg.handler_contact_number = req.body.contact_number
+      console.log(req.body.email)
+
+      mhreg.save()
+
+      const saltRounds = 10
+      const hashedPassword = await bcrpyt.hashSync(req.body.hpassword, saltRounds)
+
+      const user = new regmodel.users()
+
+      user.user_email = req.body.email
+      user.user_password = hashedPassword
+      user.user_role = 'mess_handler'
+      user.user_status = '4'
+      user.user_contact_number = req.body.contact_number
+
+      user.save();
+      res.status(200).json(req.body);
+  } else {
+      console.log('Data is available.');
+      res.status(401).json(req.body);
+
+  }
+
+  //res.send("<h1>reg page<h1>");
+
+  //console.log('hello world',req.body);
+}

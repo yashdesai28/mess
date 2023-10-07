@@ -1,5 +1,6 @@
 import bcrpyt from 'bcrypt'
 import * as regmodel from '../models/regmodels.js'
+import { response } from 'express';
 
 export const login = async (req, res) => {
   const loginuser = await regmodel.users.find({user_contact_number: req.body.contact_number});
@@ -63,10 +64,22 @@ export const login = async (req, res) => {
           res.status(200).json([logingust,loginuser])
           console.log(logingust,loginuser);
         }
+        else if(userrole[0]=="admin"){
+          const adminlist = await regmodel.users.find({user_contact_number: req.body.contact_number});
+          res.status(200).json(adminlist);
+          console.log(adminlist);
+
+        }
+        else if(userrole[0]=="mess_handler"){
+          const logingust = await regmodel.mess_handler.find({handler_contact_number: req.body.contact_number});
+          res.status(200).json([logingust,loginuser])
+          console.log(logingust,loginuser);
+
+        }
 
         // res.status(200).json(logingust);
-        // console.log(logingust,loginuser);
-  
+        // console.log(logingust,loginuser); 
+   
       }
       else{
         console.log('uv else call')
@@ -181,3 +194,31 @@ export const showh = async (req, res) => {
   //res.status(401).json(res.body);
   console.log('end')
 }
+
+
+
+export const showmh = async (req, res) => {
+  const loginuser = await regmodel.mess_handler.find({handler_contact_number: req.body.contact_number});
+
+  console.log(req.body);
+
+
+  if (loginuser.length > 0) {
+    console.log('Data is available')
+
+    console.log(loginuser);
+    
+    res.status(200).json(loginuser);
+
+
+  } else {
+    console.log('Data is not available')
+    res.status(401).json(res.body);
+  }
+
+  //console.log(loginuser)
+
+  //res.status(401).json(res.body);
+  console.log('end')
+}
+
