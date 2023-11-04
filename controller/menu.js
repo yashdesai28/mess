@@ -98,3 +98,116 @@ export const show_menu = async (req, res) => {
 
     //res.send("<h1>reg page<h1>");
 }
+
+
+export const show_next_menu = async (req, res) => {
+    let flg = 0
+    const now = new Date()
+
+    // Get the current day as a number (0 for Sunday, 1 for Monday, etc.)
+    const day = now.getDay()
+
+    // Days are indexed from 0 (Sunday) to 6 (Saturday)
+    const daysOfWeek = [
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday'
+    ]
+
+    // Get the name of the current day
+    const dayName = daysOfWeek[day]
+    console.log(day);
+    console.log(`Current day: ${dayName}`);
+
+    // Get the current date
+    const currentDate = new Date();
+
+    // Get the next day
+    
+    const nextDay = new Date(currentDate);
+    nextDay.setDate(currentDate.getDate() + 1);
+
+    const day1 = nextDay.getDay();
+    const nextdayName = daysOfWeek[day1]
+    console.log("next day :",day1);
+    console.log(`next day name : ${nextdayName}`);
+
+
+    // Format the dates
+    const currentFormatted = currentDate.toDateString();
+    const nextDayFormatted = nextDay.toDateString();
+
+    console.log("Current date:", currentFormatted);
+    console.log("Next day and date:", nextDayFormatted);
+
+
+
+    await menumodel.menus
+        .find({ days: nextdayName })
+
+        .then(menus => {
+            if (menus.length > 0) {
+                console.log('Data is available.')
+                res.status(200).json(menus)
+                flg = 1
+            } else {
+                flg = 0
+                res.status(401).json(req.body)
+                console.log('Data is not available.')
+            }
+        })
+
+    //res.send("<h1>reg page<h1>");
+}
+
+
+export const show_menu_handler = async (req, res) => {
+    let flg = 0
+    // Days are indexed from 0 (Sunday) to 6 (Saturday)
+
+
+    await menumodel.menus
+        .find({ days: req.body.days })
+
+        .then(menus => {
+            if (menus.length > 0) {
+                console.log('Data is available.')
+                res.status(200).json(menus)
+                flg = 1
+            } else {
+                flg = 0
+                res.status(401).json(req.body)
+                console.log('Data is not available.')
+            }
+        })
+
+    //res.send("<h1>reg page<h1>");
+}
+
+export const show_menu_allday = async (req, res) => {
+    let flg = 0
+    // Days are indexed from 0 (Sunday) to 6 (Saturday)
+
+
+    await menumodel.menus
+        .find({})
+
+        .then(menus => {
+            if (menus.length > 0) {
+                console.log('Data is available.')
+                res.status(200).json(menus)
+                flg = 1
+            } else {
+                flg = 0
+                res.status(401).json(req.body)
+                console.log('Data is not available.')
+            }
+        })
+
+    //res.send("<h1>reg page<h1>");
+}
+

@@ -7,6 +7,12 @@ import { reg_router as regrouter } from './routes/registrastion.js'
 import { login_router as loginrouter } from './routes/login.js'
 import {Change_Password as chpass} from './routes/Change-Password.js'
 import {menu_router as menus_router} from './routes/menu.js'
+import { showuserdata as show_user_data } from './routes/showuserdata.js';
+import {notificationroter as notiroter } from './routes/notification.js'
+import { bmeals_router as bookedmeals } from './routes/bookedmeals.js';
+import {showmeal as showmeals}from './routes/viewqr.js'
+import {attendance_router as attrouts} from './routes/attendance_booking.js';
+import {analysis_router as analysis} from './routes/analysis.js'
 import cors from 'cors'
 //import * as reg from './controller/registrastion.js'
 
@@ -37,6 +43,13 @@ server.use('/', regrouter)
 server.use('/', loginrouter)
 server.use('/',chpass)
 server.use('/',menus_router)
+server.use('/',show_user_data)
+server.use('/',bookedmeals)
+server.use('/',showmeals)
+server.use('/',attrouts);
+server.use('/',analysis)
+server.use(express.json());
+server.use('/',notiroter);
 
 // access to body
 server.use(express.json())
