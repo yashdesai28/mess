@@ -7,6 +7,7 @@ const attendance_router=express.Router();
 //api for login
 attendance_router
 .post('/hatt',att.hattendance)
+.post('/ghatt',att.gattendance)
 
 
 

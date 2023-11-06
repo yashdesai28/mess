@@ -1,5 +1,6 @@
 import * as bmeal from '../models/Bookedmeals.js'
 import * as regmodel from '../models/regmodels.js'
+import * as gbook from '../models/guestbookedmeals.js'
 
 export const analysis = async (req, res) => {
 
@@ -112,6 +113,84 @@ export const analysis = async (req, res) => {
     console.log(analysis_data["total_number_student_for_having_dinner_attendance"])
 
     res.status(200).json(analysis_data);
+
+
+}
+
+export const guestanalysis = async (req, res) => {
+
+    const now = new Date()
+
+    // Get the current day as a number (0 for Sunday, 1 for Monday, etc.)
+    const day = now.getDay()
+    const mo = now.getMonth() + 1;
+
+    const date = now.getDate() + "/" + mo + "/" + now.getFullYear()
+
+    console.log(now)
+    console.log(mo);
+
+    // Days are indexed from 0 (Sunday) to 6 (Saturday)
+    const daysOfWeek = [
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday'
+    ]
+
+    // Get the name of the current day
+    const dayName = daysOfWeek[day]
+
+    console.log(`Current day: ${dayName}`);
+    console.log('date', date);
+
+
+    // total current booking collection
+    const allcountcollaction = await gbook.gBookedmeals.countDocuments({ date: { $eq: date } });
+    const total_guest = await regmodel.guests_regs.countDocuments({});
+
+    const totel_pepole = await gbook.gBookedmeals.aggregate([{ $match: { date: date } }, { $group: { _id: "$date", totalAmount: { $sum: "$quantity" } } }]);
+
+    const totel_remain = await gbook.gBookedmeals.aggregate([{ $match: { $and: [{ date: date }, { lunch_attendance: false }] } }, { $group: { _id: "$date", totalAmount: { $sum: "$quantity" } } }]);
+
+    const totel_having = await gbook.gBookedmeals.aggregate([{ $match: { $and: [{ date: date }, { lunch_attendance: true }] } }, { $group: { _id: "$date", totalAmount: { $sum: "$quantity" } } }]);
+
+    const totel_money = await gbook.gBookedmeals.aggregate([{ $match: { date: date } }, { $group: { _id: "$date", totalAmount: { $sum: "$amount" } } }]);
+  
+
+
+    // res.status(200).json(allcountcollaction);
+
+    console.log("demo=",totel_pepole);
+
+    console.log("number of current booking ", allcountcollaction)
+    console.log("total pepole", totel_pepole.length > 0 ? totel_pepole[0]["totalAmount"] : 0);
+    console.log("total number of remaining lunch", totel_remain.length > 0 ? totel_remain[0]["totalAmount"] : 0);
+    console.log("total number of having lunch", totel_having.length > 0 ? totel_having[0]["totalAmount"] : 0);
+    console.log("total money for this day", totel_money.length > 0 ? totel_money[0]["totalAmount"] : 0);
+    console.log("total number of guest ",total_guest);
+
+
+    var analysis_data = {
+        "number_of_current_booking": allcountcollaction,
+        "total_of_guest":total_guest,
+        "total_pepole": totel_pepole.length > 0 ? totel_pepole[0]["totalAmount"] : 0,
+        "total_number_of_remaining_lunch": totel_remain.length > 0 ? totel_remain[0]["totalAmount"] : 0,
+        "total_number_of_having_lunch": totel_having.length > 0 ? totel_having[0]["totalAmount"] : 0,
+        "total_money_for_this_day": totel_money.length > 0 ? totel_money[0]["totalAmount"] : 0
+
+    }
+
+    console.log(analysis_data)
+
+
+
+    res.status(200).json(analysis_data);
+
+
 
 
 }

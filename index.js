@@ -13,6 +13,7 @@ import { bmeals_router as bookedmeals } from './routes/bookedmeals.js';
 import {showmeal as showmeals}from './routes/viewqr.js'
 import {attendance_router as attrouts} from './routes/attendance_booking.js';
 import {analysis_router as analysis} from './routes/analysis.js'
+import {gbmeals_router as gbmeals} from './routes/gBookedmeals.js'
 import cors from 'cors'
 //import * as reg from './controller/registrastion.js'
 
@@ -48,6 +49,7 @@ server.use('/',bookedmeals)
 server.use('/',showmeals)
 server.use('/',attrouts);
 server.use('/',analysis)
+server.use('/',gbmeals)
 server.use(express.json());
 server.use('/',notiroter);
 
@@ -77,3 +79,4 @@ server.use(express.json())
 server.listen(8080, () => {
   console.log('server is runing')
 })
+ 

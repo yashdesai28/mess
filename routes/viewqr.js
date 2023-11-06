@@ -8,10 +8,11 @@ const showmeal = express.Router()
 showmeal
     // guest data show for admin penal
     .post('/showmeals',qr.bmeals)
+    .post('/gshowmeals',qr.guestbmeals)
     //hoster data show for admin penal
     
 
     
-
+  
 
 export { showmeal as showmeal }
